@@ -1,16 +1,15 @@
 import { Container, SimpleGrid, Text, VStack } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useProductStore } from "../store/product";
-import ProductCard from "../components/ProductCard";
+import { useRoomStore } from "../store/room";
+import RoomCard from "../components/RoomCard";
 
 const HomePage = () => {
-	const { fetchProducts, products } = useProductStore();
+	const { fetchRooms, rooms } = useRoomStore();
 
 	useEffect(() => {
-		fetchProducts();
-	}, [fetchProducts]);
-	console.log("products", products);
+		fetchRooms();
+	}, [fetchRooms]);
 
 	return (
 		<Container maxW='container.xl' py={12}>
@@ -22,7 +21,7 @@ const HomePage = () => {
 					bgClip={"text"}
 					textAlign={"center"}
 				>
-					Current Products 🚀
+					Available Rooms 🏨
 				</Text>
 
 				<SimpleGrid
@@ -34,23 +33,19 @@ const HomePage = () => {
 					spacing={10}
 					w={"full"}
 				>
-					{products.map((product) => (
-						<ProductCard key={product._id} product={product} />
+					{rooms.map((room) => (
+						<RoomCard key={room._id} room={room} />
 					))}
+			
 				</SimpleGrid>
-
-				{products.length === 0 && (
+				{rooms.length === 0 && (
 					<Text fontSize='xl' textAlign={"center"} fontWeight='bold' color='gray.500'>
-						No products found 😢{" "}
-						<Link to={"/create"}>
-							<Text as='span' color='blue.500' _hover={{ textDecoration: "underline" }}>
-								Create a product
-							</Text>
-						</Link>
+						No rooms found 😢{" "}
 					</Text>
 				)}
 			</VStack>
 		</Container>
 	);
 };
+
 export default HomePage;

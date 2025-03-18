@@ -34,3 +34,5 @@ npm run start
 ```
 
 ### I'll see you in the next one! 🚀
+
+build之后不管再怎么修改代码都没用了，得rebuild
