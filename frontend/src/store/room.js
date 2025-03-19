@@ -8,6 +8,7 @@ export const useRoomStore = create((set) => ({
 		const data = await res.json();
 		set({ rooms: data.data });
 	},
+	
 	searchRooms: async (searchParams) => {
 		const res = await fetch("/api/rooms/search", {
 		  method: "POST", // 或者 "GET"，取决于后端设计
