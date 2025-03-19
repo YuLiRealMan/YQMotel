@@ -101,7 +101,6 @@
 // };
 
 // export default CheckInPage;
-
 import {
 	Box,
 	Button,
@@ -112,6 +111,7 @@ import {
 	useToast,
 	VStack,
 	Select,
+	Text,
 } from "@chakra-ui/react";
 import { useState } from "react";
 
@@ -156,40 +156,58 @@ const CheckInPage = () => {
 				</Heading>
 
 				<Box w={"full"} bg={useColorModeValue("white", "gray.800")} p={6} rounded={"lg"} shadow={"md"}>
-					<VStack spacing={4}>
-						<Input
-							type='date'
-							placeholder='Check-In Date'
-							value={booking.checkIn}
-							onChange={(e) => setBooking({ ...booking, checkIn: e.target.value })}
-						/>
-						<Input
-							type='date'
-							placeholder='Check-Out Date'
-							value={booking.checkOut}
-							onChange={(e) => setBooking({ ...booking, checkOut: e.target.value })}
-						/>
-						<Select
-							value={booking.beds}
-							onChange={(e) => setBooking({ ...booking, beds: e.target.value })}
-						>
-							<option value='1'>1 Bed</option>
-							<option value='2'>2 Beds</option>
-						</Select>
-						<Select
-							value={booking.pet}
-							onChange={(e) => setBooking({ ...booking, pet: e.target.value })}
-						>
-							<option value='no'>No Pets</option>
-							<option value='yes'>Pets Allowed</option>
-						</Select>
-						<Select
-							value={booking.smoking}
-							onChange={(e) => setBooking({ ...booking, smoking: e.target.value })}
-						>
-							<option value='no'>Non-Smoking</option>
-							<option value='yes'>Smoking Allowed</option>
-						</Select>
+					<VStack spacing={4} align="stretch">
+
+						<Box>
+							<Text mb={1}>Check-In Date</Text>
+							<Input
+								type='date'
+								value={booking.checkIn}
+								onChange={(e) => setBooking({ ...booking, checkIn: e.target.value })}
+							/>
+						</Box>
+
+						<Box>
+							<Text mb={1}>Check-Out Date</Text>
+							<Input
+								type='date'
+								value={booking.checkOut}
+								onChange={(e) => setBooking({ ...booking, checkOut: e.target.value })}
+							/>
+						</Box>
+
+						<Box>
+							<Text mb={1}>Number of Beds</Text>
+							<Select
+								value={booking.beds}
+								onChange={(e) => setBooking({ ...booking, beds: e.target.value })}
+							>
+								<option value='1'>1 Bed</option>
+								<option value='2'>2 Beds</option>
+							</Select>
+						</Box>
+
+						<Box>
+							<Text mb={1}>Pet Preference</Text>
+							<Select
+								value={booking.pet}
+								onChange={(e) => setBooking({ ...booking, pet: e.target.value })}
+							>
+								<option value='no'>No Pets</option>
+								<option value='yes'>Pets Allowed</option>
+							</Select>
+						</Box>
+
+						<Box>
+							<Text mb={1}>Smoking Preference</Text>
+							<Select
+								value={booking.smoking}
+								onChange={(e) => setBooking({ ...booking, smoking: e.target.value })}
+							>
+								<option value='no'>Non-Smoking</option>
+								<option value='yes'>Smoking Allowed</option>
+							</Select>
+						</Box>
 
 						<Button colorScheme='blue' onClick={handleCreateBooking} w='full'>
 							Submit Booking
