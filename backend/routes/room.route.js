@@ -5,6 +5,6 @@ import { getRooms, searchRooms } from "../controllers/room.controller.js";
 const room_router = express.Router();
 
 room_router.get("/", getRooms);
-room_router.post("/search", searchRooms);
+room_router.post("/", searchRooms);
 
 export default room_router;

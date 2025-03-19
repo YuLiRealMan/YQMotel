@@ -28,7 +28,7 @@ export const useRoomStore = create((set) => ({
 	}
 	*/
 	searchRooms: async (searchParams) => {
-		const res = await fetch("/api/rooms/search", {
+		const res = await fetch("/api/rooms", {
 		  method: "POST", // 或者 "GET"，取决于后端设计
 		  headers: {
 			"Content-Type": "application/json",

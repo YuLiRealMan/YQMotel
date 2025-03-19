@@ -6,7 +6,7 @@ import { connectDB } from "./config/db.js";
 
 import productRoutes from "./routes/product.route.js";
 import roomRoutes from "./routes/room.route.js";
-
+import orderRoutes from "./routes/order.route.js";
 dotenv.config();
 
 const app = express();
@@ -17,7 +17,7 @@ const __dirname = path.resolve();
 app.use(express.json()); // allows us to accept JSON data in the req.body
 
 app.use("/api/rooms", roomRoutes);
-
+app.use("/api/orders",orderRoutes);
 // if (process.env.NODE_ENV === "production") {
 // 	app.use(express.static(path.join(__dirname, "/frontend/dist")));
 // 	app.get("*", (req, res) => {

@@ -29,21 +29,6 @@ const orderSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
-    gst: {
-      type: Number,
-      required: false,
-      min: 0,
-    },
-    pst: {
-      type: Number,
-      required: false,
-      min: 0,
-    },
-    accommodation_tax: {
-      type: Number,
-      required: false,
-      min: 0,
-    },
     deposit: {
       type: Number,
       required: false,

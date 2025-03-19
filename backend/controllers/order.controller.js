@@ -10,9 +10,6 @@ export const createOrder = async (req, res) => {
       arrival_date,
       checkout_date,
       base_rate,
-      gst,
-      pst,
-      accommodation_tax,
       deposit,
       notes,
     } = req.body;
@@ -24,9 +21,6 @@ export const createOrder = async (req, res) => {
       arrival_date,
       checkout_date,
       base_rate,
-      gst,
-      pst,
-      accommodation_tax,
       deposit,
       notes,
     });
@@ -46,7 +40,7 @@ export const createOrder = async (req, res) => {
 };
 
 // READ all orders
-export const getAllOrders = async (req, res) => {
+export const getOrders = async (req, res) => {
   try {
     const orders = await Order.find();
     return res.status(200).json({
@@ -62,7 +56,7 @@ export const getAllOrders = async (req, res) => {
 };
 
 // READ a single order by id
-export const getOrderById = async (req, res) => {
+export const getOrder = async (req, res) => {
   const { id } = req.params;
   try {
     const order = await Order.findById(id);
