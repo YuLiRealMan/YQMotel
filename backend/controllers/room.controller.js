@@ -11,6 +11,34 @@ export const getRooms = async (req, res) => {
 	}
 };
 
+export const searchRooms = async (req, res) => {
+	const { checkIn, checkOut, beds, pet, smoking } = req.body;
+	console.log(req.body);
+  
+	try {
+	  // 基本的查询条件
+	  const query = {
+		is_available: true, // 房间必须是可用的
+		bed_count: beds, // 床位数等于请求的床位数
+		is_smoking_friendly: smoking, // 吸烟友好条件
+	  };
+  
+	  // 如果带宠物，要求房间是允许宠物的；如果没带宠物，则不限制
+	  if (pet) {
+		query.is_pet_friendly = true; // 带宠物时只选择允许宠物的房间
+	  }
+  
+	  // 查询符合条件的房间
+	  const rooms = await Room.find(query);
+  
+	  // 返回符合条件的房间列表
+	  res.status(200).json({ success: true, data: rooms });
+	} catch (error) {
+	  console.log("error in searching rooms:", error.message);
+	  res.status(500).json({ success: false, message: "Server Error" });
+	}
+  };
+
 // export const createProduct = async (req, res) => {
 // 	const product = req.body; // user will send this data
 

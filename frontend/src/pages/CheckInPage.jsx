@@ -1,106 +1,3 @@
-// import { useState } from "react";
-// import { Container, VStack, Button, Box, Text, RadioGroup, Radio, Stack, FormControl, FormLabel, Select } from "@chakra-ui/react";
-// import DatePicker from "react-datepicker";
-// import "react-datepicker/dist/react-datepicker.css";
-
-// const CheckInPage = () => {
-//   const [checkInDate, setCheckInDate] = useState(new Date());
-//   const [checkOutDate, setCheckOutDate] = useState(new Date());
-//   const [bedSelection, setBedSelection] = useState("1");
-//   const [petOption, setPetOption] = useState("no");
-//   const [smokingOption, setSmokingOption] = useState("no");
-
-//   const handleSubmit = () => {
-//     console.log({
-//       checkInDate,
-//       checkOutDate,
-//       bedSelection,
-//       petOption,
-//       smokingOption,
-//     });
-//   };
-
-//   return (
-//     <Container maxW="container.sm" py={8}>
-//       <VStack spacing={6} align="center">
-//         <Text fontSize="2xl" fontWeight="bold">Check In</Text>
-
-//         {/* Date Selectors */}
-//         <Box w="full">
-//           <FormControl>
-//             <FormLabel>Check In Date</FormLabel>
-//             <DatePicker
-//               selected={checkInDate}
-//               onChange={(date) => setCheckInDate(date)}
-//               dateFormat="MMMM d, yyyy"
-//               className="chakra-input"
-//               isClearable
-//             />
-//           </FormControl>
-//         </Box>
-
-//         <Box w="full">
-//           <FormControl>
-//             <FormLabel>Check Out Date</FormLabel>
-//             <DatePicker
-//               selected={checkOutDate}
-//               onChange={(date) => setCheckOutDate(date)}
-//               dateFormat="MMMM d, yyyy"
-//               className="chakra-input"
-//               isClearable
-//             />
-//           </FormControl>
-//         </Box>
-
-//         {/* Bed Selection */}
-//         <Box w="full">
-//           <FormControl>
-//             <FormLabel>Bed Selection</FormLabel>
-//             <RadioGroup onChange={setBedSelection} value={bedSelection}>
-//               <Stack direction="row">
-//                 <Radio value="1">1 Bed</Radio>
-//                 <Radio value="2">2 Beds</Radio>
-//               </Stack>
-//             </RadioGroup>
-//           </FormControl>
-//         </Box>
-
-//         {/* Pet Option */}
-//         <Box w="full">
-//           <FormControl>
-//             <FormLabel>Pet Option</FormLabel>
-//             <RadioGroup onChange={setPetOption} value={petOption}>
-//               <Stack direction="row">
-//                 <Radio value="yes">Yes</Radio>
-//                 <Radio value="no">No</Radio>
-//               </Stack>
-//             </RadioGroup>
-//           </FormControl>
-//         </Box>
-
-//         {/* Smoking Option */}
-//         <Box w="full">
-//           <FormControl>
-//             <FormLabel>Smoking Option</FormLabel>
-//             <RadioGroup onChange={setSmokingOption} value={smokingOption}>
-//               <Stack direction="row">
-//                 <Radio value="yes">Yes</Radio>
-//                 <Radio value="no">No</Radio>
-//               </Stack>
-//             </RadioGroup>
-//           </FormControl>
-//         </Box>
-
-//         {/* Submit Button */}
-//         <Button colorScheme="blue" onClick={handleSubmit} size="lg" width="full">
-//           Confirm Check In
-//         </Button>
-//       </VStack>
-//     </Container>
-//   );
-// };
-
-// export default CheckInPage;
 import {
 	Box,
 	Button,
@@ -112,111 +9,173 @@ import {
 	VStack,
 	Select,
 	Text,
-} from "@chakra-ui/react";
-import { useState } from "react";
-
-const CheckInPage = () => {
+  } from "@chakra-ui/react";
+  import { useState } from "react";
+  import { useRoomStore } from "../store/room";
+  
+  const CheckInPage = () => {
 	const [booking, setBooking] = useState({
-		checkIn: "",
-		checkOut: "",
-		beds: "1",
-		pet: "no",
-		smoking: "no",
+	  checkIn: "",
+	  checkOut: "",
+	  beds: "1",
+	  pet: "no",
+	  smoking: "no",
 	});
+  
+	const { searchRooms } = useRoomStore();
 	const toast = useToast();
-
-	const handleCreateBooking = () => {
-		// Simulated response, replace with API call if needed
-		const success = true;
-		const message = "Booking created successfully!";
-
+	const [loading, setLoading] = useState(false); // 添加加载状态
+  
+	const handleSearchRooms = async () => {
+	  const { checkIn, checkOut, beds, pet, smoking } = booking;
+  
+	  // 基本验证
+	  if (!checkIn || !checkOut) {
 		toast({
-			title: success ? "Success" : "Error",
-			description: message,
-			status: success ? "success" : "error",
-			isClosable: true,
+		  title: "Missing Information",
+		  description: "Please select both check-in and check-out dates.",
+		  status: "warning",
+		  isClosable: true,
 		});
-
-		if (success) {
-			setBooking({
-				checkIn: "",
-				checkOut: "",
-				beds: "1",
-				pet: "no",
-				smoking: "no",
-			});
-		}
+		return;
+	  }
+  
+	  // 验证 checkOut 晚于 checkIn
+	  if (new Date(checkOut) <= new Date(checkIn)) {
+		toast({
+		  title: "Invalid Dates",
+		  description: "Check-out date must be after check-in date.",
+		  status: "error",
+		  isClosable: true,
+		});
+		return;
+	  }
+  
+	  // 构造搜索参数对象
+	  const searchParams = {
+		checkIn,
+		checkOut,
+		beds: parseInt(beds), // 转换为数字
+		pet: pet === "yes", // 转换为布尔值
+		smoking: smoking === "yes", // 转换为布尔值
+	  };
+  
+	  setLoading(true); // 开始加载
+  
+	  try {
+		await searchRooms(searchParams); // 传递对象给 searchRooms
+		toast({
+		  title: "Search Complete",
+		  description: "Rooms matching your preferences have been found.",
+		  status: "success",
+		  isClosable: true,
+		});
+	  } catch (error) {
+		console.error("Search error:", error);
+		toast({
+		  title: "Search Failed",
+		  description: "There was an error searching for rooms.",
+		  status: "error",
+		  isClosable: true,
+		});
+	  } finally {
+		setLoading(false); // 结束加载
+	  }
 	};
-
+  
+	// 更新 booking 状态的辅助函数
+	const handleInputChange = (e) => {
+	  const { name, value } = e.target;
+	  setBooking((prev) => ({
+		...prev,
+		[name]: value,
+	  }));
+	};
+  
 	return (
-		<Container maxW={"container.sm"}>
-			<VStack spacing={8}>
-				<Heading as={"h1"} size={"2xl"} textAlign={"center"} mb={8}>
-					Create Booking
-				</Heading>
-
-				<Box w={"full"} bg={useColorModeValue("white", "gray.800")} p={6} rounded={"lg"} shadow={"md"}>
-					<VStack spacing={4} align="stretch">
-
-						<Box>
-							<Text mb={1}>Check-In Date</Text>
-							<Input
-								type='date'
-								value={booking.checkIn}
-								onChange={(e) => setBooking({ ...booking, checkIn: e.target.value })}
-							/>
-						</Box>
-
-						<Box>
-							<Text mb={1}>Check-Out Date</Text>
-							<Input
-								type='date'
-								value={booking.checkOut}
-								onChange={(e) => setBooking({ ...booking, checkOut: e.target.value })}
-							/>
-						</Box>
-
-						<Box>
-							<Text mb={1}>Number of Beds</Text>
-							<Select
-								value={booking.beds}
-								onChange={(e) => setBooking({ ...booking, beds: e.target.value })}
-							>
-								<option value='1'>1 Bed</option>
-								<option value='2'>2 Beds</option>
-							</Select>
-						</Box>
-
-						<Box>
-							<Text mb={1}>Pet Preference</Text>
-							<Select
-								value={booking.pet}
-								onChange={(e) => setBooking({ ...booking, pet: e.target.value })}
-							>
-								<option value='no'>No Pets</option>
-								<option value='yes'>Pets Allowed</option>
-							</Select>
-						</Box>
-
-						<Box>
-							<Text mb={1}>Smoking Preference</Text>
-							<Select
-								value={booking.smoking}
-								onChange={(e) => setBooking({ ...booking, smoking: e.target.value })}
-							>
-								<option value='no'>Non-Smoking</option>
-								<option value='yes'>Smoking Allowed</option>
-							</Select>
-						</Box>
-
-						<Button colorScheme='blue' onClick={handleCreateBooking} w='full'>
-							Submit Booking
-						</Button>
-					</VStack>
-				</Box>
+	  <Container maxW={"container.sm"}>
+		<VStack spacing={8}>
+		  <Heading as={"h1"} size={"2xl"} textAlign={"center"} mb={8}>
+			Create Booking
+		  </Heading>
+  
+		  <Box
+			w={"full"}
+			bg={useColorModeValue("white", "gray.800")}
+			p={6}
+			rounded={"lg"}
+			shadow={"md"}
+		  >
+			<VStack spacing={4} align="stretch">
+			  <Box>
+				<Text mb={1}>Check-In Date</Text>
+				<Input
+				  type="date"
+				  name="checkIn" // 添加 name 属性
+				  value={booking.checkIn}
+				  onChange={handleInputChange}
+				/>
+			  </Box>
+  
+			  <Box>
+				<Text mb={1}>Check-Out Date</Text>
+				<Input
+				  type="date"
+				  name="checkOut" // 添加 name 属性
+				  value={booking.checkOut}
+				  onChange={handleInputChange}
+				/>
+			  </Box>
+  
+			  <Box>
+				<Text mb={1}>Number of Beds</Text>
+				<Select
+				  name="beds" // 添加 name 属性
+				  value={booking.beds}
+				  onChange={handleInputChange}
+				>
+				  <option value="1">1 Bed</option>
+				  <option value="2">2 Beds</option>
+				</Select>
+			  </Box>
+  
+			  <Box>
+				<Text mb={1}>Pet Preference</Text>
+				<Select
+				  name="pet" // 添加 name 属性
+				  value={booking.pet}
+				  onChange={handleInputChange}
+				>
+				  <option value="no">No Pets</option>
+				  <option value="yes">Pets Allowed</option>
+				</Select>
+			  </Box>
+  
+			  <Box>
+				<Text mb={1}>Smoking Preference</Text>
+				<Select
+				  name="smoking" // 添加 name 属性
+				  value={booking.smoking}
+				  onChange={handleInputChange}
+				>
+				  <option value="no">Non-Smoking</option>
+				  <option value="yes">Smoking Allowed</option>
+				</Select>
+			  </Box>
+  
+			  <Button
+				colorScheme="blue"
+				onClick={handleSearchRooms}
+				w="full"
+				isLoading={loading} // 添加加载状态
+			  >
+				Search Room
+			  </Button>
 			</VStack>
-		</Container>
+		  </Box>
+		</VStack>
+	  </Container>
 	);
-};
-
-export default CheckInPage;
+  };
+  
+  export default CheckInPage;
