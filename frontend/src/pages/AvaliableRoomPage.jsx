@@ -4,11 +4,11 @@ import { useRoomStore } from "../store/room";
 import RoomCard from "../components/RoomCard";
 
 const HomePage = () => {
-  const { fetchRooms, rooms } = useRoomStore();
+  const { searchRooms, rooms } = useRoomStore();
 
-  useEffect(() => {
-    fetchRooms();
-  }, [fetchRooms]);
+  // useEffect(() => {
+  //   searchRooms();
+  // }, [searchRooms]);
 
   return (
     <Container maxW="container.xl" py={12}>

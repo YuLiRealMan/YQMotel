@@ -13,7 +13,7 @@ export const getRooms = async (req, res) => {
 
 export const searchRooms = async (req, res) => {
 	const { checkIn, checkOut, beds, pet, smoking } = req.body;
-	console.log(req.body);
+	// console.log(req.body);
   
 	try {
 	  // 基本的查询条件
@@ -22,7 +22,7 @@ export const searchRooms = async (req, res) => {
 		bed_count: beds, // 床位数等于请求的床位数
 		is_smoking_friendly: smoking, // 吸烟友好条件
 	  };
-  
+	//   console.log("THis is pet", pet);
 	  // 如果带宠物，要求房间是允许宠物的；如果没带宠物，则不限制
 	  if (pet) {
 		query.is_pet_friendly = true; // 带宠物时只选择允许宠物的房间

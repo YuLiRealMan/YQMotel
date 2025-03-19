@@ -60,8 +60,8 @@ import {
 		checkIn,
 		checkOut,
 		beds: parseInt(beds), // 转换为数字
-		pet,
-		smoking
+		pet: pet === "true",// 转换为布尔值
+		smoking: smoking === "true"
 	  };
   
 	  setLoading(true); // 开始加载, 這裏是個圈轉一下
