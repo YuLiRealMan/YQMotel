@@ -8,6 +8,7 @@ import Navbar from "./components/Navbar";
 import HomeOptionPage from "./pages/HomeOptionPage";
 import CheckInPage from "./pages/CheckInPage";
 import CheckOutPage from "./pages/CheckOutPage";
+import AvaliableRoomPage from "./pages/AvaliableRoomPage";
 function App() {
 	return (
 		<Box minH={"100vh"} bg={useColorModeValue("gray.100", "gray.900")}>
@@ -16,6 +17,7 @@ function App() {
 				<Route path='/' element={<HomeOptionPage />} />
 				<Route path="/checkin" element={<CheckInPage />} />
 				<Route path="/checkout" element={<CheckOutPage />} />
+				<Route path='/room' element={<AvaliableRoomPage />} />
 				{/* <Route path='/create' element={<CreatePage />} /> */}
 			</Routes>
 		</Box>

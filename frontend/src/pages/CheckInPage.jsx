@@ -12,7 +12,8 @@ import {
   } from "@chakra-ui/react";
   import { useState } from "react";
   import { useRoomStore } from "../store/room";
-  
+  import { useNavigate } from 'react-router-dom';
+
   const CheckInPage = () => {
 	const [condition, setCondition] = useState({
 	  checkIn: "",
@@ -24,6 +25,8 @@ import {
   
 	const { searchRooms } = useRoomStore();
 	const toast = useToast();
+	const navigate = useNavigate();
+
 	const [loading, setLoading] = useState(false); // 添加加载状态 就是個圈轉一下
   
 	const handleSearchRooms = async () => {
@@ -71,6 +74,9 @@ import {
 		  status: "success",
 		  isClosable: true,
 		});
+
+		navigate('/room'); // 跳转到 /rooms 页面
+
 	  } catch (error) {
 		console.error("Search error:", error);
 		toast({
