@@ -9,6 +9,24 @@ export const useRoomStore = create((set) => ({
 		set({ rooms: data.data });
 	},
 	
+	//這個就是給後端發送post-http://localhost:5000/api/rooms/search
+	//然後後端會給我們 以下這段消息
+	/*
+	{
+    "success": true,
+    "data": [
+        {
+            "_id": "67d9ce13349383ad471e912a",
+            "room_number": 3,
+            "room_type": "One Double Bed",
+            "bed_count": 1,
+            "base_rate": 89,
+            "is_pet_friendly": true,
+            "is_smoking_friendly": false,
+            "is_available": true
+        }....
+	}
+	*/
 	searchRooms: async (searchParams) => {
 		const res = await fetch("/api/rooms/search", {
 		  method: "POST", // 或者 "GET"，取决于后端设计
@@ -17,6 +35,7 @@ export const useRoomStore = create((set) => ({
 		  },
 		  body: JSON.stringify(searchParams),
 		});
+		//我們得到的是一個json數據
 		const data = await res.json();
 		set({ rooms: data.data }); // 更新 rooms 状态
 	  },

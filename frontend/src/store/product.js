@@ -52,4 +52,32 @@ export const useProductStore = create((set) => ({
 
 		return { success: true, message: data.message };
 	},
+	// searchProducts: async (name = "", price = "", image = "") => {
+	// 	try {
+	// 	  const res = await fetch("/api/products/search", {
+	// 		method: "POST",
+	// 		headers: {
+	// 		  "Content-Type": "application/json",
+	// 		},
+	// 		body: JSON.stringify({
+	// 		  name, // Search by name (partial match)
+	// 		  price, // Search by price (exact or range, depending on backend)
+	// 		  image, // Search by image (e.g., URL or filename)
+	// 		}),
+	// 	  });
+	
+	// 	  const data = await res.json();
+	
+	// 	  if (!res.ok || !data.success) {
+	// 		return { success: false, message: data.message || "Search failed" };
+	// 	  }
+	
+	// 	  // Update the products state with the search results
+	// 	  set({ products: data.data });
+	// 	  return { success: true, message: "Search completed successfully" };
+	// 	} catch (error) {
+	// 	  console.error("Search error:", error);
+	// 	  return { success: false, message: "Error searching for products" };
+	// 	}
+	//   },
 }));

@@ -1,3 +1,19 @@
+/*
+we already defined model in folder models, now we can use model to do actual CRUD operations in the database
+here are some example of how to use model to do CRUD operations
+Model.find() - find all documents in the collection
+Model.findById() - find a single document by its _id
+Model.findOne() - find a single document
+Model.create() - create a single document
+Model.updateOne() - update a single document
+Model.updateMany() - update multiple documents
+Model.deleteOne() - delete a single document
+Model.deleteMany() - delete multiple documents
+Model.findOneAndUpdate() - find a document and update it
+Model.findOneAndDelete() - find a document and delete it
+Model.findOneAndRemove() - find a document and remove it
+etc.
+*/
 import mongoose from "mongoose";
 import Product from "../models/product.model.js";
 

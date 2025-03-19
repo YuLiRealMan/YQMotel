@@ -14,7 +14,7 @@ import {
   import { useRoomStore } from "../store/room";
   
   const CheckInPage = () => {
-	const [booking, setBooking] = useState({
+	const [condition, setCondition] = useState({
 	  checkIn: "",
 	  checkOut: "",
 	  beds: "1",
@@ -24,11 +24,12 @@ import {
   
 	const { searchRooms } = useRoomStore();
 	const toast = useToast();
-	const [loading, setLoading] = useState(false); // 添加加载状态
+	const [loading, setLoading] = useState(false); // 添加加载状态 就是個圈轉一下
   
 	const handleSearchRooms = async () => {
-	  const { checkIn, checkOut, beds, pet, smoking } = booking;
-  
+		//底下的return的頁面會給condition賦值，這裏吧condition的值取出來
+	  const { checkIn, checkOut, beds, pet, smoking } = condition;
+	  
 	  // 基本验证
 	  if (!checkIn || !checkOut) {
 		toast({
@@ -51,16 +52,16 @@ import {
 		return;
 	  }
   
-	  // 构造搜索参数对象
+	  // 這裏要轉換一下 ,沒賦值的話就説明沒改變
 	  const searchParams = {
 		checkIn,
 		checkOut,
 		beds: parseInt(beds), // 转换为数字
-		pet: pet === "yes", // 转换为布尔值
-		smoking: smoking === "yes", // 转换为布尔值
+		pet,
+		smoking
 	  };
   
-	  setLoading(true); // 开始加载
+	  setLoading(true); // 开始加载, 這裏是個圈轉一下
   
 	  try {
 		await searchRooms(searchParams); // 传递对象给 searchRooms
@@ -84,9 +85,12 @@ import {
 	};
   
 	// 更新 booking 状态的辅助函数
+	/*
+	這個函數是**處理表單輸入變化（onChange）**用的。每當使用者改變某個輸入框（例如選了 "2 Beds"），這個函數就會更新對應的欄位。
+	*/
 	const handleInputChange = (e) => {
 	  const { name, value } = e.target;
-	  setBooking((prev) => ({
+	  setCondition((prev) => ({
 		...prev,
 		[name]: value,
 	  }));
@@ -96,7 +100,7 @@ import {
 	  <Container maxW={"container.sm"}>
 		<VStack spacing={8}>
 		  <Heading as={"h1"} size={"2xl"} textAlign={"center"} mb={8}>
-			Create Booking
+			Fill Conditions
 		  </Heading>
   
 		  <Box
@@ -112,7 +116,7 @@ import {
 				<Input
 				  type="date"
 				  name="checkIn" // 添加 name 属性
-				  value={booking.checkIn}
+				  value={condition.checkIn}
 				  onChange={handleInputChange}
 				/>
 			  </Box>
@@ -122,7 +126,7 @@ import {
 				<Input
 				  type="date"
 				  name="checkOut" // 添加 name 属性
-				  value={booking.checkOut}
+				  value={condition.checkOut}
 				  onChange={handleInputChange}
 				/>
 			  </Box>
@@ -131,7 +135,7 @@ import {
 				<Text mb={1}>Number of Beds</Text>
 				<Select
 				  name="beds" // 添加 name 属性
-				  value={booking.beds}
+				  value={condition.beds}
 				  onChange={handleInputChange}
 				>
 				  <option value="1">1 Bed</option>
@@ -140,26 +144,26 @@ import {
 			  </Box>
   
 			  <Box>
-				<Text mb={1}>Pet Preference</Text>
+				<Text mb={1}>Pet</Text>
 				<Select
 				  name="pet" // 添加 name 属性
-				  value={booking.pet}
+				  value={condition.pet}
 				  onChange={handleInputChange}
 				>
-				  <option value="no">No Pets</option>
-				  <option value="yes">Pets Allowed</option>
+				  <option value="false">No</option>
+				  <option value="true">Yes</option>
 				</Select>
 			  </Box>
   
 			  <Box>
-				<Text mb={1}>Smoking Preference</Text>
+				<Text mb={1}>Smoking</Text>
 				<Select
 				  name="smoking" // 添加 name 属性
-				  value={booking.smoking}
+				  value={condition.smoking}
 				  onChange={handleInputChange}
 				>
-				  <option value="no">Non-Smoking</option>
-				  <option value="yes">Smoking Allowed</option>
+				  <option value="false">No</option>
+				  <option value="true">Yes</option>
 				</Select>
 			  </Box>
   
