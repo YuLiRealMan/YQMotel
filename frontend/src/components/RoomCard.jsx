@@ -19,6 +19,7 @@ import {
 	useToast,
 	VStack,
 	FormLabel,
+	Checkbox,
 } from "@chakra-ui/react";
 import { useState } from "react";
 
@@ -30,6 +31,7 @@ const RoomCard = ({ room }) => {
 	const [numChildren, setNumChildren] = useState("");
 	const [finalPrice, setFinalPrice] = useState("");
 	const [hasCalculated, setHasCalculated] = useState(false);
+	const [depositPaid, setDepositPaid] = useState(false); // New state for deposit checkbox
 
 	const textColor = useColorModeValue("gray.600", "gray.200");
 	const bg = useColorModeValue("white", "gray.800");
@@ -52,6 +54,12 @@ const RoomCard = ({ room }) => {
 		if (kids >= 1) {
 			total += 5;
 		}
+
+		// Add deposit if checked
+		if (depositPaid) {
+			total += 100; // Deposit is fixed at 100
+		}
+
 		setFinalPrice(total);
 		setHasCalculated(true);
 	};
@@ -60,7 +68,7 @@ const RoomCard = ({ room }) => {
 		onClose();
 		toast({
 			title: "Selection Confirmed",
-			description: `Name: ${name}, Phone: ${phone}, Guests: ${numGuests}, Pets: ${numPets}, Children: ${numChildren}, Price: $${finalPrice}`,
+			description: `Name: ${name}, Phone: ${phone}, Guests: ${numGuests}, Pets: ${numPets}, Children: ${numChildren}, Deposit Paid: ${depositPaid ? "Yes" : "No"}, Price: $${finalPrice}`,
 			status: "success",
 			duration: 5000,
 			isClosable: true,
@@ -147,6 +155,16 @@ const RoomCard = ({ room }) => {
 								<FormLabel>Base Rate</FormLabel>
 								<Input value={room.base_rate} isReadOnly />
 							</Box>
+							{/* Deposit Checkbox */}
+							<Box>
+								<FormLabel>Deposit</FormLabel>
+								<Checkbox
+									isChecked={depositPaid}
+									onChange={() => setDepositPaid(!depositPaid)}
+								>
+									$100 deposit
+								</Checkbox>
+							</Box>
 							<Box>
 								<FormLabel>Total Price</FormLabel>
 								{hasCalculated && (
@@ -157,6 +175,9 @@ const RoomCard = ({ room }) => {
 									/>
 								)}
 							</Box>
+
+
+
 							<Button colorScheme='green' onClick={calculatePrice}>
 								Calculate Price
 							</Button>
